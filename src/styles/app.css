@@ -1,0 +1,1827 @@
+/*
+ * Application layout and components.
+ *
+ * Two shapes only: a phone layout with a fixed bottom bar, and a wide layout with a
+ * sidebar. Both are driven by the same route definitions, and only one navigation
+ * element is ever in the DOM.
+ */
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background-color: var(--color-canvas);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  /* Nothing in a workout log needs to scroll sideways. */
+  overflow-x: hidden;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-sm);
+}
+
+.skip-link {
+  position: absolute;
+  top: var(--space-2);
+  inset-inline-start: var(--space-2);
+  z-index: 20;
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-surface-raised);
+  color: var(--color-text);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform var(--duration-fast) ease-out;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* ---------------------------------------------------------------- shell -- */
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  padding-top: max(var(--space-3), env(safe-area-inset-top));
+  padding-inline-start: max(var(--space-4), env(safe-area-inset-left));
+  padding-inline-end: max(var(--space-4), env(safe-area-inset-right));
+  background-color: var(--color-surface);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.app-header__brand {
+  font-size: var(--font-size-lg);
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+
+.app-body {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+}
+
+.app-main {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  max-width: var(--layout-max-width);
+  margin-inline: auto;
+  padding: var(--space-5) var(--space-4);
+  padding-inline-start: max(var(--space-4), env(safe-area-inset-left));
+  padding-inline-end: max(var(--space-4), env(safe-area-inset-right));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* Room for the fixed bottom bar plus the home indicator. */
+.app-shell--compact .app-main {
+  padding-bottom: calc(var(--space-7) + var(--tap-target-min) + env(safe-area-inset-bottom));
+}
+
+.app-main:focus {
+  outline: none;
+}
+
+/* ----------------------------------------------------------- navigation -- */
+
+.primary-nav__list {
+  display: flex;
+  margin: 0;
+}
+
+.primary-nav__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--tap-target-min);
+  min-width: var(--tap-target-min);
+  padding: var(--space-2);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+}
+
+.primary-nav__label {
+  font-size: var(--font-size-xs);
+  font-weight: 550;
+}
+
+/*
+ * Active state uses three cues at once: colour, weight, and a solid marker bar,
+ * so it is still readable without colour perception.
+ */
+.primary-nav__link--active {
+  color: var(--color-accent-strong);
+  font-weight: 700;
+  background-color: var(--color-accent-quiet);
+}
+
+.primary-nav--bottom {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 10;
+  background-color: var(--color-surface);
+  border-top: var(--border-width) solid var(--color-border);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.primary-nav--bottom .primary-nav__list {
+  justify-content: space-around;
+  align-items: stretch;
+  padding: var(--space-1) var(--space-1);
+}
+
+.primary-nav--bottom .primary-nav__item {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.primary-nav--bottom .primary-nav__link {
+  flex-direction: column;
+  gap: var(--space-1);
+  min-height: var(--tap-target-min);
+  position: relative;
+}
+
+.primary-nav--bottom .primary-nav__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.primary-nav--bottom .primary-nav__link--active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  inset-inline: 25%;
+  height: 3px;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  background-color: var(--color-accent-strong);
+}
+
+.primary-nav--sidebar {
+  flex: 0 0 var(--sidebar-width);
+  padding: var(--space-4) var(--space-3);
+  border-inline-end: var(--border-width) solid var(--color-border);
+  background-color: var(--color-surface);
+}
+
+.primary-nav--sidebar .primary-nav__list {
+  position: sticky;
+  top: var(--space-4);
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.primary-nav--sidebar .primary-nav__link {
+  justify-content: flex-start;
+  padding: var(--space-3);
+  gap: var(--space-3);
+}
+
+.primary-nav--sidebar .primary-nav__label {
+  font-size: var(--font-size-base);
+}
+
+.primary-nav--sidebar .primary-nav__link--active {
+  box-shadow: inset 3px 0 0 var(--color-accent-strong);
+}
+
+/* -------------------------------------------------------------- surfaces -- */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.page__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.page__heading {
+  /*
+   * Capped against the viewport and allowed to break.
+   *
+   * A heading in `rem` doubles at 200% zoom, and this is the first heading whose text a
+   * user supplies: a recorded workout's page heading is its name. At 320 px with 200%
+   * text, an uncapped, unbreakable name pushed the whole page wider -- the same lesson
+   * as `minmax(0, 1fr)` and `min(<size>, 100%)`, one element further along.
+   */
+  font-size: min(var(--font-size-2xl), 9vw);
+  line-height: var(--line-height-tight);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.page__lead {
+  color: var(--color-text-muted);
+  max-width: 60ch;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.card__heading {
+  font-size: var(--font-size-lg);
+  font-weight: 650;
+  line-height: var(--line-height-tight);
+}
+
+.card__body {
+  color: var(--color-text-muted);
+  max-width: 60ch;
+}
+
+/* A second-level heading inside a card, e.g. "Add as copy" under Restore. */
+.card__subheading {
+  margin-block-start: var(--space-3);
+  font-size: var(--font-size-base);
+  font-weight: 650;
+  line-height: var(--line-height-tight);
+}
+
+/*
+ * Prose bullets, used by the privacy list. `1fr` would not shrink below its longest
+ * unbreakable word, so the text is allowed to break instead -- the same rule this project
+ * has needed for grid tracks, fieldsets, and a page heading.
+ */
+.prose-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-inline-start: var(--space-5);
+  list-style: disc;
+  color: var(--color-text-muted);
+  max-width: 60ch;
+  overflow-wrap: anywhere;
+}
+
+.import-preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/*
+ * One labelled fact per row, wrapping to two lines on a narrow phone rather than
+ * squeezing the value off the edge.
+ */
+.import-preview__facts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+}
+
+.import-preview__fact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: space-between;
+  padding-block: var(--space-1);
+  border-block-end: var(--border-width) solid var(--color-border);
+}
+
+.import-preview__fact dt {
+  color: var(--color-text-muted);
+  min-width: min(12rem, 100%);
+  overflow-wrap: anywhere;
+}
+
+.import-preview__fact dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+}
+
+/* A file input is not a text field; it must still meet the coarse-pointer target size. */
+.input[type='file'] {
+  padding-block: var(--space-2);
+  line-height: 1.6;
+}
+
+.status {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: var(--border-width) solid var(--color-border);
+  border-inline-start-width: 4px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+}
+
+.status__title {
+  font-weight: 650;
+}
+
+.status__body {
+  color: var(--color-text-muted);
+  max-width: 60ch;
+}
+
+/* Two or more actions inside a status message, e.g. "Update now" beside "Later". */
+.status__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.status__buttons .button {
+  flex: 1 1 8rem;
+}
+
+.status--info {
+  border-inline-start-color: var(--color-info);
+  background-color: var(--color-info-surface);
+}
+
+.status--success {
+  border-inline-start-color: var(--color-success);
+  background-color: var(--color-success-surface);
+}
+
+.status--warning {
+  border-inline-start-color: var(--color-warning);
+  background-color: var(--color-warning-surface);
+}
+
+.status--error {
+  border-inline-start-color: var(--color-danger);
+  background-color: var(--color-danger-surface);
+}
+
+/* -------------------------------------------------------------- controls -- */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--tap-target-min);
+  min-width: var(--tap-target-min);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-md);
+  border: var(--border-width) solid transparent;
+  font-weight: 650;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) ease-out;
+}
+
+.button--primary {
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+  font-size: var(--font-size-lg);
+}
+
+.button--primary:hover:not(:disabled) {
+  background-color: var(--color-accent-strong);
+}
+
+.button--secondary {
+  background-color: var(--color-surface-raised);
+  border-color: var(--color-border-strong);
+  color: var(--color-text);
+}
+
+.button--block {
+  width: 100%;
+  min-height: 3.5rem;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap-target-min);
+  min-width: var(--tap-target-min);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.icon-button:hover {
+  color: var(--color-text);
+}
+
+.primary-action {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.primary-action__hint {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  max-width: 60ch;
+}
+
+.icon {
+  flex: none;
+}
+
+/* -------------------------------------------------------------- catalog -- */
+
+/*
+ * The catalog is used one-handed, standing up, often mid-set. Two columns on a phone
+ * keeps photos large enough to recognise at a glance while still showing several
+ * machines; the grid widens rather than shrinking the pictures on a larger screen.
+ */
+
+.catalog-actions {
+  display: flex;
+  gap: var(--space-3);
+}
+
+/* Not full-bleed: on a phone the catalog's job is to show photos, and an oversized
+   action would push the first row of machines below the fold. */
+.catalog-actions .button {
+  flex: 0 1 auto;
+}
+
+.catalog-filters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.catalog-filters__search {
+  display: flex;
+  gap: var(--space-2);
+  align-items: stretch;
+}
+
+.catalog-filters__search .input {
+  flex: 1;
+  min-width: 0;
+}
+
+.catalog-filters__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.catalog-filters__row > * {
+  flex: 1 1 10rem;
+  min-width: 0;
+}
+
+/*
+ * Filters collapse by default.
+ *
+ * Four controls stacked above the grid filled an entire phone screen, which meant the
+ * machines -- the whole point of the page -- were never visible on arrival. Search stays
+ * out in the open because it is the control actually reached for mid-workout.
+ */
+.catalog-filters__more {
+  border-top: var(--border-width) solid var(--color-border);
+  padding-top: var(--space-3);
+}
+
+.catalog-filters__more[open] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.catalog-filters__summary {
+  display: flex;
+  align-items: center;
+  min-height: var(--tap-target-min);
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.machine-card__photo {
+  /* Contain, never crop: cutting a portrait photo to a square can remove the seat or the
+     stack, which is exactly what makes a machine recognisable. */
+  max-height: 10rem;
+  object-fit: contain;
+}
+
+.catalog-count {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.machine-grid {
+  display: grid;
+  /*
+   * `min(...)` lets a track shrink below its ideal width instead of forcing the grid
+   * wider than its container. Without it, a 320 px phone at 200% zoom -- where 9.5rem is
+   * 304 px -- pushes the whole page into horizontal scrolling.
+   */
+  grid-template-columns: repeat(auto-fill, minmax(min(9.5rem, 100%), 1fr));
+  gap: var(--space-4);
+  list-style: none;
+  padding: 0;
+}
+
+.machine-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.machine-card__link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  color: var(--color-text);
+  text-decoration: none;
+  /* The whole tile is the target, so the tap area is far larger than the minimum. */
+  min-height: var(--tap-target-min);
+}
+
+.machine-card__link:hover .machine-card__name {
+  text-decoration: underline;
+}
+
+.machine-card__name {
+  font-weight: 650;
+  line-height: var(--line-height-tight);
+}
+
+.machine-card__meta,
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.machine-card__muscles {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.machine-card__favorite {
+  position: absolute;
+  inset-block-start: var(--space-2);
+  inset-inline-end: var(--space-2);
+  background-color: var(--color-surface-raised);
+  border: var(--border-width) solid var(--color-border);
+  font-size: var(--font-size-lg);
+}
+
+.machine-card__favorite[aria-pressed='true'] {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+/* Tags carry a border and a label, never colour alone. */
+.tag {
+  display: inline-block;
+  padding: var(--space-1) var(--space-2);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-tight);
+}
+
+.tag--quiet {
+  color: var(--color-text-muted);
+  border-style: dashed;
+}
+
+.tag--archived {
+  border-color: var(--color-warning);
+  background-color: var(--color-warning-surface);
+}
+
+.machine-photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-raised);
+  object-fit: contain;
+}
+
+.machine-photo--empty {
+  display: grid;
+  place-items: center;
+  min-height: 6rem;
+  color: var(--color-text-muted);
+  border: var(--border-width) dashed var(--color-border-strong);
+}
+
+.machine-detail__photo {
+  max-width: 22rem;
+  margin-inline: auto;
+}
+
+.machine-detail__alert:focus {
+  outline: none;
+}
+
+.machine-detail__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/*
+ * A bare `1fr` track has an automatic minimum of min-content, so it cannot shrink below
+ * the longest unbreakable word it holds -- which at 200% zoom on a 320px screen pushed
+ * setup notes like "narrow/Double-D" straight past the viewport. `minmax(0, 1fr)` lets
+ * the track shrink, and `overflow-wrap` lets the word itself break rather than being the
+ * thing that decides the page width.
+ */
+.detail-list {
+  display: grid;
+  grid-template-columns: minmax(min(7rem, 40%), auto) minmax(0, 1fr);
+  gap: var(--space-1) var(--space-3);
+}
+
+.detail-list dt {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.detail-list dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.detail-list--compact {
+  font-size: var(--font-size-sm);
+}
+
+.exercise-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  list-style: none;
+  padding: 0;
+}
+
+.exercise-list__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.exercise-list__name {
+  font-size: var(--font-size-base);
+  font-weight: 650;
+}
+
+.card__note {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* ---------------------------------------------------------------- forms -- */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.form--inline {
+  padding: var(--space-4);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+}
+
+.form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.form__actions .button {
+  flex: 1 1 8rem;
+}
+
+.form__photo-preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: flex-start;
+  max-width: 12rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.field__label {
+  font-weight: 650;
+}
+
+.field__hint {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  max-width: 60ch;
+}
+
+/* An error is text plus a border change, so it survives without colour perception. */
+.field__error {
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  font-weight: 650;
+}
+
+.field__error::before {
+  content: '! ';
+}
+
+.input {
+  width: 100%;
+  min-height: var(--tap-target-min);
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-text);
+  background-color: var(--color-surface-raised);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  font: inherit;
+}
+
+.input--multiline {
+  min-height: 5rem;
+  resize: vertical;
+}
+
+.input[aria-invalid='true'] {
+  border-color: var(--color-danger);
+  border-width: 2px;
+}
+
+.fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.fieldset__legend {
+  padding-inline: var(--space-2);
+  font-weight: 650;
+}
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(8rem, 100%), 1fr));
+  gap: var(--space-2);
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--tap-target-min);
+  cursor: pointer;
+}
+
+.toggle input {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex: none;
+}
+
+/* --------------------------------------------------------------- dialog -- */
+
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: var(--space-4);
+  background-color: rgb(0 0 0 / 55%);
+}
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: min(28rem, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: var(--space-5);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-raised);
+}
+
+.dialog__title {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  line-height: var(--line-height-tight);
+}
+
+.dialog__body {
+  color: var(--color-text-muted);
+}
+
+.dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.dialog__actions .button {
+  flex: 1 1 8rem;
+}
+
+.button--danger {
+  background-color: var(--color-danger);
+  color: var(--color-text-inverse);
+}
+
+/* --------------------------------------------------------------- workout -- */
+
+.start-choices,
+.active-workout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.start-choices__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.start-choices__hint {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.start-choices__heading,
+.start-choices__subheading,
+.active-workout__section,
+.summary__heading,
+.summary__subheading {
+  margin: 0;
+}
+
+.active-workout__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  background-color: var(--color-surface-raised);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.active-workout__name {
+  margin: 0;
+  font-size: var(--font-size-lg);
+}
+
+.active-workout__timer {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.active-workout__timer-label,
+.active-workout__started {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+.active-workout__timer-value {
+  font-size: min(2rem, 12vw);
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+}
+
+/*
+ * The closing actions sit at the bottom of the flow rather than floating over it: a
+ * fixed bar covers the last segment on a short phone screen, which is exactly where the
+ * final numbers are being typed.
+ */
+.active-workout__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-block-start: var(--space-4);
+  border-block-start: var(--border-width) solid var(--color-border);
+}
+
+.activity {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.activity__heading {
+  margin: 0;
+  font-size: var(--font-size-lg);
+}
+
+.segment-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.segment {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background-color: var(--color-surface-raised);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.segment__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.segment__heading {
+  margin: 0;
+  font-size: var(--font-size-base);
+}
+
+/* Status reads as text, so it never depends on colour alone. */
+.segment__status {
+  margin: 0;
+  padding: var(--space-1) var(--space-2);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+}
+
+.segment__target {
+  padding: var(--space-3);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-sm);
+}
+
+.segment__legend {
+  margin: 0 0 var(--space-2);
+  font-weight: 650;
+}
+
+.segment__target-empty {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.segment__actual {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+/*
+ * `min()` in the track floor is required, not cosmetic: a bare `minmax(11rem, 1fr)`
+ * cannot shrink below its floor and overflows a 320px viewport at 200% zoom.
+ */
+.segment__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(11rem, 100%), 1fr));
+  gap: var(--space-3);
+}
+
+/* Secondary fields collapse so the four the treadmill shows stay within thumb reach. */
+.segment__more {
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.segment__more[open] {
+  padding-block-end: var(--space-3);
+}
+
+.segment__more-summary {
+  display: flex;
+  align-items: center;
+  min-height: var(--tap-target-min);
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  font-weight: 650;
+}
+
+.segment__more > .segment__grid,
+.segment__more > .field {
+  margin-inline: var(--space-3);
+}
+
+.segment__derived,
+.segment__derived-hint {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.segment__save-state {
+  margin: 0;
+  font-size: var(--font-size-sm);
+}
+
+.segment__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.segment__actions .button {
+  flex: 1 1 auto;
+}
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.summary__segments {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.summary__segment {
+  padding: var(--space-3);
+  background-color: var(--color-surface-raised);
+  border-radius: var(--radius-sm);
+}
+
+.summary__segment-heading {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-size-base);
+}
+
+.summary__columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(13rem, 100%), 1fr));
+  gap: var(--space-3);
+}
+
+/*
+ * A note is free text typed into a textarea, so it can hold line breaks and a word longer
+ * than a 320px phone. `pre-wrap` keeps the shape it was written in and `anywhere` stops an
+ * unbroken run of characters from deciding the width of the page.
+ */
+.summary__segment-note {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* -------------------------------------------------------------- strength -- */
+
+.activity__note {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.activity__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.activity__actions .button {
+  flex: 1 1 auto;
+}
+
+.activity__hint {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.set-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.set {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background-color: var(--color-surface-raised);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.set__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.set__heading {
+  margin: 0;
+  font-size: var(--font-size-base);
+}
+
+/* Status reads as text, so it never depends on colour alone. */
+.set__status {
+  margin: 0;
+  padding: var(--space-1) var(--space-2);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+}
+
+/* The last comparable result sits with the fields, not on an analytics page. */
+.set__previous {
+  padding: var(--space-3);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-sm);
+}
+
+.set__previous-heading {
+  margin: 0 0 var(--space-1);
+  font-size: var(--font-size-sm);
+  font-weight: 650;
+}
+
+.set__previous-value {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.set__previous-empty,
+.set__previous-source {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/*
+ * `min-width: 0` is required, not cosmetic. A fieldset's default `min-width: min-content`
+ * cannot shrink below the widest thing inside it, so at 320px with 200% text the grid's
+ * intrinsic width pushed the whole page wider. Every other layout rule here already
+ * assumes a container that is allowed to get narrow.
+ */
+.set__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-3);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.set__legend {
+  margin: 0 0 var(--space-2);
+  font-weight: 650;
+}
+
+/*
+ * `min()` in the track floor is required, not cosmetic: a bare `minmax(11rem, 1fr)`
+ * cannot shrink below its floor and overflows a 320px viewport at 200% zoom.
+ */
+.set__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(11rem, 100%), 1fr));
+  gap: var(--space-3);
+}
+
+/* What the number means stays next to the number, never behind a disclosure. */
+.set__basis-explanation {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.set__load {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.set__steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.set__steps .button {
+  flex: 1 1 auto;
+}
+
+.set__more {
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.set__more[open] {
+  padding-block-end: var(--space-3);
+}
+
+.set__more-summary {
+  display: flex;
+  align-items: center;
+  min-height: var(--tap-target-min);
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  font-weight: 650;
+}
+
+.set__more > .set__grid,
+.set__more > .field {
+  margin-inline: var(--space-3);
+}
+
+.set__save-state {
+  margin: 0;
+  font-size: var(--font-size-sm);
+}
+
+.set__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.set__actions .button {
+  flex: 1 1 auto;
+}
+
+/* A record is announced in words; the border is decoration, not the message. */
+.set__records {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.set__record {
+  padding: var(--space-3);
+  background-color: var(--color-surface);
+  border-inline-start: var(--space-1) solid var(--color-accent);
+  border-radius: var(--radius-sm);
+}
+
+.set__record-title {
+  margin: 0;
+  font-weight: 650;
+}
+
+.set__record-explanation,
+.set__first-result,
+.set__records-unavailable {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/*
+ * The proposal a copied set opens with. Marked out from the recorded values above it by a
+ * rule and its own indent, never by colour alone -- the sentence itself says that nothing
+ * here has been recorded.
+ */
+.set__proposed {
+  margin: 0 0 var(--space-2);
+  padding-inline-start: var(--space-2);
+  border-inline-start: 3px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  overflow-wrap: anywhere;
+}
+
+.set__first-result {
+  margin-block-start: 0;
+}
+
+/* Information, never a gate: nothing on the page waits for this. */
+.rest-timer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background-color: var(--color-surface-raised);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.rest-timer__value,
+.rest-timer__over {
+  margin: 0;
+}
+
+.rest-timer__label {
+  font-weight: 650;
+}
+
+.rest-timer__remaining {
+  font-variant-numeric: tabular-nums;
+}
+
+.rest-timer__note {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* ------------------------------------------------------ machine picker -- */
+
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.picker__heading {
+  margin: 0;
+  font-size: var(--font-size-lg);
+}
+
+.picker__step {
+  margin: 0;
+  font-size: var(--font-size-base);
+}
+
+.picker__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(10rem, 100%), 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.picker__machine {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  width: 100%;
+  min-height: var(--tap-target-min);
+  padding: var(--space-2);
+  background-color: var(--color-surface-raised);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  text-align: start;
+  cursor: pointer;
+}
+
+.picker__photo {
+  width: 100%;
+}
+
+.picker__machine-name {
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+.picker__machine-aliases,
+.picker__machine-confidence {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  overflow-wrap: anywhere;
+}
+
+.picker__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.picker__hint {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.picker__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.picker__actions .button {
+  flex: 1 1 auto;
+}
+
+/* ------------------------------------------------- strength in summary -- */
+
+.summary__note {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.summary__strength,
+.summary__sets {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.summary__strength-activity {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background-color: var(--color-surface-raised);
+  border-radius: var(--radius-sm);
+}
+
+.summary__strength-heading {
+  margin: 0;
+  font-size: var(--font-size-base);
+}
+
+.summary__strength-subheading {
+  margin: var(--space-2) 0 0;
+  font-size: var(--font-size-sm);
+}
+
+.summary__strength-count,
+.summary__volume,
+.summary__volume-unavailable,
+.summary__volume-note {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.summary__volume-note,
+.summary__volume-unavailable {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.summary__volume-label {
+  font-weight: 650;
+}
+
+.summary__set {
+  padding: var(--space-3);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-sm);
+}
+
+.summary__set-heading {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-size-sm);
+}
+
+/* ------------------------------------------------------- history -- */
+
+.history-actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-block-end: var(--space-4);
+}
+
+.history-list {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /* `1fr` has an automatic min-content minimum, so a long unbroken word would push the
+     page wider at high zoom. `minmax(0, 1fr)` lets the word wrap instead. */
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.history-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.history-card__status {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.history-card__time,
+.history-card__duration,
+.history-card__counts,
+.history-card__saved,
+.history-card__deleted {
+  margin: var(--space-1) 0 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.history-card__actions {
+  margin-block-start: var(--space-3);
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.history-day {
+  margin-block-start: var(--space-5);
+}
+
+.history-day__heading {
+  margin: 0 0 var(--space-3);
+  font-size: var(--font-size-lg);
+  overflow-wrap: anywhere;
+}
+
+.section-heading {
+  margin: var(--space-6) 0 var(--space-3);
+  font-size: var(--font-size-xl);
+  overflow-wrap: anywhere;
+}
+
+.section-subheading {
+  margin: var(--space-4) 0 var(--space-2);
+  font-size: var(--font-size-base);
+}
+
+/* A definition list that stays readable at 320 px and does not force a second column. */
+.fact-list {
+  display: grid;
+  gap: var(--space-2);
+  grid-template-columns: minmax(0, 1fr);
+  margin: var(--space-3) 0 0;
+}
+
+.fact {
+  display: grid;
+  gap: var(--space-1);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.fact__label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.fact__value {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.activity-detail,
+.session-facts,
+.session-totals,
+.strength-group,
+.coverage-week {
+  margin-block-start: var(--space-4);
+}
+
+.segment-detail,
+.set-detail {
+  margin-block-start: var(--space-4);
+  padding-block-start: var(--space-3);
+  border-block-start: var(--border-width) solid var(--color-border);
+}
+
+.segment-detail__heading,
+.set-detail__heading {
+  margin: 0;
+  font-size: var(--font-size-base);
+  overflow-wrap: anywhere;
+}
+
+.segment-detail__status,
+.set-detail__status {
+  color: var(--color-text-muted);
+}
+
+.segment-detail__note,
+.set-detail__note {
+  margin: var(--space-2) 0 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.segment-detail__form,
+.set-detail__form,
+.session-facts__form {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: minmax(0, 1fr);
+  margin-block-start: var(--space-3);
+}
+
+.activity-detail__volume {
+  margin: var(--space-3) 0 0;
+  font-size: var(--font-size-sm);
+  overflow-wrap: anywhere;
+}
+
+.session-detail__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-block-start: var(--space-4);
+}
+
+/* ------------------------------------------------------ progress -- */
+
+.progress-section {
+  margin-block-start: var(--space-5);
+}
+
+/* Wide content scrolls inside its own box. The page itself must never scroll
+   horizontally, at any zoom level. */
+.table-scroll {
+  overflow-x: auto;
+  margin-block-start: var(--space-3);
+}
+
+.data-table {
+  border-collapse: collapse;
+  min-width: 100%;
+  font-size: var(--font-size-sm);
+}
+
+.data-table__caption {
+  text-align: start;
+  padding-block-end: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.data-table th,
+.data-table td {
+  padding: var(--space-2) var(--space-3);
+  border-block-end: var(--border-width) solid var(--color-border);
+  text-align: start;
+  white-space: nowrap;
+}
+
+.data-table th {
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.progress-incline__list,
+.progress-weeks {
+  margin: var(--space-2) 0 0;
+  padding-inline-start: var(--space-5);
+  font-size: var(--font-size-sm);
+}
+
+.strength-group__identity {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+/* ---------------------------------------------------------------- wide -- */
+
+@media (min-width: 48rem) {
+  .app-main {
+    padding-block: var(--space-6);
+  }
+
+  .machine-grid {
+    grid-template-columns: repeat(auto-fill, minmax(min(12rem, 100%), 1fr));
+  }
+
+  .picker__grid {
+    grid-template-columns: repeat(auto-fill, minmax(min(12rem, 100%), 1fr));
+  }
+
+  .catalog-actions {
+    justify-content: flex-start;
+  }
+
+  .catalog-actions .button {
+    flex: 0 0 auto;
+  }
+
+  .active-workout__actions {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .active-workout__actions .button {
+    flex: 0 0 auto;
+  }
+
+  .fact-list {
+    grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr));
+  }
+
+  .segment-detail__form,
+  .set-detail__form,
+  .session-facts__form {
+    grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
+  }
+}

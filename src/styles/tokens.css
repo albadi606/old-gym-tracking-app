@@ -1,0 +1,160 @@
+/*
+ * Design tokens.
+ *
+ * Dark is the default look for a gym floor; light is a warm off-white. Both palettes
+ * are defined here, and only the palette layer changes between them, so no component
+ * ever needs to know which theme is active.
+ *
+ * `[data-theme]` wins over the system preference so the Settings theme control can override the default.
+ */
+
+:root {
+  /* Spacing: a 4px base scale. */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  /* Type. Numerals are what matters most in a workout log. */
+  --font-sans:
+    system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    'Noto Sans Arabic', sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.375rem;
+  --font-size-2xl: 1.75rem;
+  --line-height-tight: 1.25;
+  --line-height-base: 1.55;
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 1rem;
+
+  --border-width: 1px;
+
+  /* A coarse pointer needs a 44x44 CSS pixel target. Never lower this. */
+  --tap-target-min: 2.75rem;
+
+  --focus-ring-width: 3px;
+  --focus-ring-offset: 2px;
+
+  --layout-max-width: 46rem;
+  --sidebar-width: 15rem;
+
+  --shadow-raised: 0 1px 2px rgb(0 0 0 / 25%), 0 8px 24px rgb(0 0 0 / 18%);
+
+  /* Motion is opt-in: every duration collapses to zero under reduced-motion. */
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+}
+
+/* Dark palette (default). */
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-canvas: #14171c;
+  --color-surface: #1c2027;
+  --color-surface-raised: #232831;
+  --color-border: #333b47;
+  --color-border-strong: #4a5462;
+
+  --color-text: #eef1f5;
+  --color-text-muted: #adb6c4;
+  --color-text-inverse: #10131a;
+
+  --color-accent: #35c9a4;
+  --color-accent-strong: #4fd9b6;
+  --color-accent-quiet: #16342e;
+  --color-on-accent: #06211b;
+
+  --color-info: #7fb6ea;
+  --color-info-surface: #16283a;
+  --color-success: #5cd07f;
+  --color-success-surface: #14301f;
+  --color-warning: #e8bd63;
+  --color-warning-surface: #33280f;
+  --color-danger: #ff8f85;
+  --color-danger-surface: #3a1c1b;
+
+  --color-focus-ring: #8fd8ff;
+}
+
+/* Light palette (warm off-white). */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    color-scheme: light;
+
+    --color-canvas: #f7f5f1;
+    --color-surface: #ffffff;
+    --color-surface-raised: #ffffff;
+    --color-border: #ddd8d0;
+    --color-border-strong: #b3aca1;
+
+    --color-text: #1d2126;
+    --color-text-muted: #56606c;
+    --color-text-inverse: #ffffff;
+
+    --color-accent: #0d7a63;
+    --color-accent-strong: #095c4a;
+    --color-accent-quiet: #e2f2ee;
+    --color-on-accent: #ffffff;
+
+    --color-info: #1f5f96;
+    --color-info-surface: #e6eff8;
+    --color-success: #1c6b3a;
+    --color-success-surface: #e3f2e8;
+    --color-warning: #82600d;
+    --color-warning-surface: #faf0d8;
+    --color-danger: #a52c22;
+    --color-danger-surface: #fbe7e5;
+
+    --color-focus-ring: #1a4f7a;
+
+    --shadow-raised: 0 1px 2px rgb(29 33 38 / 8%), 0 8px 24px rgb(29 33 38 / 8%);
+  }
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --color-canvas: #f7f5f1;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-border: #ddd8d0;
+  --color-border-strong: #b3aca1;
+
+  --color-text: #1d2126;
+  --color-text-muted: #56606c;
+  --color-text-inverse: #ffffff;
+
+  --color-accent: #0d7a63;
+  --color-accent-strong: #095c4a;
+  --color-accent-quiet: #e2f2ee;
+  --color-on-accent: #ffffff;
+
+  --color-info: #1f5f96;
+  --color-info-surface: #e6eff8;
+  --color-success: #1c6b3a;
+  --color-success-surface: #e3f2e8;
+  --color-warning: #82600d;
+  --color-warning-surface: #faf0d8;
+  --color-danger: #a52c22;
+  --color-danger-surface: #fbe7e5;
+
+  --color-focus-ring: #1a4f7a;
+
+  --shadow-raised: 0 1px 2px rgb(29 33 38 / 8%), 0 8px 24px rgb(29 33 38 / 8%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+  }
+}

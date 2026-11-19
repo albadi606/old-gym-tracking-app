@@ -1,0 +1,73 @@
+{
+  "name": "gym-tracker",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "A phone-first, offline workout journal that stores records on the device.",
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "assets:build": "node scripts/process-machine-images.js --build",
+    "assets:check": "node scripts/process-machine-images.js --check",
+    "icons:build": "node scripts/build-app-icons.js --build",
+    "icons:check": "node scripts/build-app-icons.js --check",
+    "architecture:check": "node scripts/check-architecture.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "dexie": "^4.4.5",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.2",
+    "zod": "^4.6.6"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.62.1",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.6",
+    "@types/node": "^26.4.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "@vitejs/plugin-react": "^6.1.0",
+    "eslint": "^10.9.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.5",
+    "fake-indexeddb": "^6.2.5",
+    "globals": "^17.11.0",
+    "jsdom": "^30.1.3",
+    "prettier": "^3.9.6",
+    "sharp": "^0.35.5",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.68.0",
+    "vite": "^8.2.4",
+    "vite-plugin-pwa": "1.3.0",
+    "vitest": "^4.1.12",
+    "workbox-window": "7.4.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "brace-expansion@2": "^2.1.7",
+      "brace-expansion@5": "^5.0.12",
+      "fast-uri@3": "^3.1.9",
+      "workbox-build>glob": "^14.0.2",
+      "minimatch@>=7 <11.0.1": "^11.0.1",
+      "serialize-javascript@7": "^7.1.3",
+      "source-map-js@1": "^1.2.2"
+    }
+  }
+}

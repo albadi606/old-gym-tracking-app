@@ -1,0 +1,118 @@
+{
+  "generatedBy": "scripts/process-machine-images.js",
+  "outputMimeType": "image/webp",
+  "machines": [
+    {
+      "seedKey": "plate-leg-press-01",
+      "source": {
+        "file": "plate-leg-press-01.jpg",
+        "sha256": "2a72839dc6ccceed0cb0e9e8bf3d72766ef56853c185799b2bc6945be7246d76",
+        "byteSize": 80525
+      },
+      "variants": [
+        {
+          "role": "thumbnail",
+          "url": "/machines/plate-leg-press-01-thumb.webp",
+          "mimeType": "image/webp",
+          "widthPx": 225,
+          "heightPx": 400,
+          "byteSize": 4942,
+          "sha256": "651f046539b179fbba9ae121a1894a6cb30043b583ce84de6b5d1d6f28e31931"
+        },
+        {
+          "role": "detail",
+          "url": "/machines/plate-leg-press-01-detail.webp",
+          "mimeType": "image/webp",
+          "widthPx": 720,
+          "heightPx": 1280,
+          "byteSize": 40760,
+          "sha256": "d7498d2ddfb8abb6c6b10d838272690c09c8bb9fb088ed41bded6eedf50cf2c5"
+        }
+      ]
+    },
+    {
+      "seedKey": "seated-leg-press-01",
+      "source": {
+        "file": "seated-leg-press-01.jpg",
+        "sha256": "0792c7594f82c4a7f5ec70b4c317a4721245795e6e83e8c73a8e5d95d0181895",
+        "byteSize": 84593
+      },
+      "variants": [
+        {
+          "role": "thumbnail",
+          "url": "/machines/seated-leg-press-01-thumb.webp",
+          "mimeType": "image/webp",
+          "widthPx": 225,
+          "heightPx": 400,
+          "byteSize": 5380,
+          "sha256": "577f9c08e8a9ab3e4eb7e007d5838eac549b7b4c2bb4105d5ac8b885f158d840"
+        },
+        {
+          "role": "detail",
+          "url": "/machines/seated-leg-press-01-detail.webp",
+          "mimeType": "image/webp",
+          "widthPx": 720,
+          "heightPx": 1280,
+          "byteSize": 38014,
+          "sha256": "f64ab45180aea0d6ad11ab8aa8b7d97fd0d7800de60738b01f92cfaa4979d485"
+        }
+      ]
+    },
+    {
+      "seedKey": "adjustable-cable-01",
+      "source": {
+        "file": "adjustable-cable-01.jpg",
+        "sha256": "7b03a94c69e549f68388f56ffc8953793e7d81bf8d7b27b5d41cc93ec803e3d9",
+        "byteSize": 69388
+      },
+      "variants": [
+        {
+          "role": "thumbnail",
+          "url": "/machines/adjustable-cable-01-thumb.webp",
+          "mimeType": "image/webp",
+          "widthPx": 225,
+          "heightPx": 400,
+          "byteSize": 3640,
+          "sha256": "a3ec21445dd22a86afa360b869d336eb5f8cf5b2d1a927adbbe054dc80a43539"
+        },
+        {
+          "role": "detail",
+          "url": "/machines/adjustable-cable-01-detail.webp",
+          "mimeType": "image/webp",
+          "widthPx": 720,
+          "heightPx": 1280,
+          "byteSize": 26568,
+          "sha256": "0d3cbdb54b128c15c163b76c7cbf5dd1a936036c1e9f9b0a4b644be66a0bf48a"
+        }
+      ]
+    },
+    {
+      "seedKey": "low-row-station-01",
+      "source": {
+        "file": "low-row-station-01.jpg",
+        "sha256": "0cf99a1bd3228c719873bbf172ccc810cdf5e782d982dfcf5e53ccfcde7b023d",
+        "byteSize": 70994
+      },
+      "variants": [
+        {
+          "role": "thumbnail",
+          "url": "/machines/low-row-station-01-thumb.webp",
+          "mimeType": "image/webp",
+          "widthPx": 225,
+          "heightPx": 400,
+          "byteSize": 3798,
+          "sha256": "31ffdb5bb119e2b4b9ad6df0bf8aa7919ebee0c43e73be630dcced8d773bd797"
+        },
+        {
+          "role": "detail",
+          "url": "/machines/low-row-station-01-detail.webp",
+          "mimeType": "image/webp",
+          "widthPx": 720,
+          "heightPx": 1280,
+          "byteSize": 28182,
+          "sha256": "2422b3246c0771eca491c82ff26502ed22e290e72e9ce3f3107146c3b61835ee"
+        }
+      ]
+    }
+  ]
+}
