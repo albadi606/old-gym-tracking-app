@@ -1,7 +1,3 @@
-# Gym Tracker
-
-Gym Tracker is a mobile-friendly workout journal with an equipment catalog, cardio and strength logging, workout history, progress reports, and backup and restore. New installations include an editable sample routine and generic equipment images.
-
 ## Run locally
 
 Install Node.js 24.15 or newer in the Node.js 24 LTS line and pnpm 9, then run:
